@@ -36,3 +36,48 @@ Uma pousada de praia familiar quer automatizar seu processo de check-in e check-
 
 - **Disciplina:** Manutenção e Melhoria de Software
 - **Professor:** Rogério Elias da Cunha
+## Como executar o projeto
+
+### Pré-requisitos
+
+Antes de iniciar, é necessário ter instalado:
+
+- Node.js
+- npm
+- Git
+
+### Backend
+
+Abra o terminal na pasta do projeto e execute:
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Deixe esse terminal aberto enquanto estiver utilizando o sistema.
+
+### Frontend
+
+Abra outro terminal na pasta do projeto e execute:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Após iniciar, o terminal mostrará o endereço para acessar o sistema no navegador.
+
+### Banco de dados
+
+O projeto utiliza SQLite e o banco de dados está localizado em:
+
+```text
+backend/pousada.db
+```
+
+### Observação
+
+A pasta `node_modules` não fica armazenada no GitHub. Por isso, ao clonar o projeto em outro computador, é necessário executar `npm install` tanto no backend quanto no frontend.
