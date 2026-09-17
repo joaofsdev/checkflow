@@ -24,13 +24,13 @@ Uma pousada de praia familiar quer automatizar seu processo de check-in e check-
 ## Equipe
 
 | Integrante | Papel |
-|-----------|-------|
-| Iago Neermann Koch | Engenheiro de Requisitos |
-| Caio Rodrigues da Silva Rosa | Desenvolvedor |
-| Patrick Gonçalves Gusmão | Desenvolvedor |
-| William Vodzinsky | Desenvolvedor |
-| João Francisco da Silva | Desenvolvedor |
-| Pedro Henrique Israel | Desenvolvedor |
+|---|---|
+| Patrick Gusman | Product Owner (PO) |
+| Iago Koch | Engenheiro de Requisitos |
+| Caio Rosa | Quality Assurance (QA) |
+| William Vodzinsky | Desenvolvedor Frontend |
+| João Silva | Desenvolvedor Backend |
+| Pedro Israel | DevOps |
 
 ## Informações acadêmicas
 
