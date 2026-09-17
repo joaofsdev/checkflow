@@ -25,7 +25,7 @@ Uma pousada de praia familiar quer automatizar seu processo de check-in e check-
 
 | Integrante | Papel |
 |---|---|
-| Patrick Gusman | Product Owner (PO) |
+| Patrick Gusmão | Product Owner (PO) |
 | Iago Koch | Engenheiro de Requisitos |
 | Caio Rosa | Quality Assurance (QA) |
 | William Vodzinsky | Desenvolvedor Frontend |
