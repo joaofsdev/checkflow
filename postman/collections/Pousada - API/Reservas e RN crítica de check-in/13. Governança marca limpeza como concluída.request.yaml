@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/quartos/{{quartoReservaId}}/limpeza"
+method: PATCH
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200', () => pm.response.to.have.status(200));
+      pm.test('Quarto volta para Livre', () => {
+          pm.expect(pm.response.json().status).to.eql('Livre');
+      });
+    language: text/javascript
+order: 13000

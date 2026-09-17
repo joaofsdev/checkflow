@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/quartos"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200', () => pm.response.to.have.status(200));
+      pm.test('Retorna uma lista', () => pm.expect(pm.response.json()).to.be.an('array'));
+      pm.test('O quarto criado está na lista', () => {
+          const ids = pm.response.json().map(q => q.id);
+          pm.expect(ids).to.include(pm.collectionVariables.get('quartoId'));
+      });
+    language: text/javascript
+order: 4000

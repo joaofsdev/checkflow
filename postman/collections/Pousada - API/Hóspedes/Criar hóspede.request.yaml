@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/hospedes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "nome": "Maria Silva",
+      "documento": "{{documentoHospede}}",
+      "telefone": "47999990000"
+    }
+scripts:
+  - type: beforeRequest
+    code: pm.collectionVariables.set('documentoHospede', 'CPF' + Date.now());
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test('Status 201', () => pm.response.to.have.status(201));
+      const body = pm.response.json();
+      pm.test('Retorna o hóspede criado', () => {
+          pm.expect(body.documento).to.eql(pm.collectionVariables.get('documentoHospede'));
+      });
+      pm.collectionVariables.set('hospedeId', body.id);
+    language: text/javascript
+order: 1000

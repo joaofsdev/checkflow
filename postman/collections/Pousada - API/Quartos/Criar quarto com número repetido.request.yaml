@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/quartos"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "numero": "{{numeroQuarto}}",
+      "tipo": "Solteiro"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 400', () => pm.response.to.have.status(400));
+      pm.test('Mensagem de erro sobre número duplicado', () => {
+          pm.expect(pm.response.json().error).to.include('número');
+      });
+    language: text/javascript
+order: 2000

@@ -1,0 +1,13 @@
+$kind: collection
+description: "Testes da API de gestão de hospedagem: quartos, hóspedes e reservas, incluindo a RN crítica de check-in."
+variables:
+  baseUrl: http://localhost:3001
+  numeroQuarto: ""
+  quartoId: ""
+  documentoHospede: ""
+  hospedeId: ""
+  numeroQuartoReserva: ""
+  quartoReservaId: ""
+  documentoHospedeReserva: ""
+  hospedeReservaId: ""
+  reservaId: ""

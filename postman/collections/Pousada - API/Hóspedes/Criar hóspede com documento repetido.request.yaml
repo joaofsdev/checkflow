@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/hospedes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "nome": "Maria Silva (outro cadastro)",
+      "documento": "{{documentoHospede}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 400', () => pm.response.to.have.status(400));
+      pm.test('Mensagem de erro sobre documento duplicado', () => {
+          pm.expect(pm.response.json().error).to.include('documento');
+      });
+    language: text/javascript
+order: 2000

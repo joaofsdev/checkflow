@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/reservas/{{reservaId}}/checkin"
+method: POST
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200', () => pm.response.to.have.status(200));
+      pm.test('Reserva passa para Em andamento', () => {
+          pm.expect(pm.response.json().status).to.eql('Em andamento');
+      });
+    language: text/javascript
+order: 7000

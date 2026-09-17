@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/reservas"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "quarto_id": {{quartoReservaId}},
+      "hospede_id": {{hospedeReservaId}},
+      "data_checkin": "2026-11-01"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 201', () => pm.response.to.have.status(201));
+      pm.test('Reserva criada com status Reservado', () => {
+          pm.expect(pm.response.json().status).to.eql('Reservado');
+      });
+      pm.collectionVariables.set('reservaId', pm.response.json().id);
+    language: text/javascript
+order: 3000

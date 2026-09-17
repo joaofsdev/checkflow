@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/reservas/{{reservaId2}}/checkin"
+method: POST
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 400', () => pm.response.to.have.status(400));
+      pm.test('Mensagem de erro da RN crítica de limpeza pendente', () => {
+          pm.expect(pm.response.json().error).to.include('limpeza pendente');
+      });
+    language: text/javascript
+order: 12000

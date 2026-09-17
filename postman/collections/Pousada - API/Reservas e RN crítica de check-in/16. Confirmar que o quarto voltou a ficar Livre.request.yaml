@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/quartos"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 200', () => pm.response.to.have.status(200));
+      pm.test('Quarto está Livre após exclusão da reserva', () => {
+          const quarto = pm.response.json().find(q => q.id === pm.collectionVariables.get('quartoReservaId'));
+          pm.expect(quarto.status).to.eql('Livre');
+      });
+    language: text/javascript
+order: 16000

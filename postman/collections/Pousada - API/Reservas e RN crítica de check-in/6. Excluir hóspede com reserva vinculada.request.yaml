@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/hospedes/{{hospedeReservaId}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status 400', () => pm.response.to.have.status(400));
+      pm.test('Mensagem de erro sobre reservas vinculadas', () => {
+          pm.expect(pm.response.json().error).to.include('reservas vinculadas');
+      });
+    language: text/javascript
+order: 6000

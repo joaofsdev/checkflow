@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/quartos/999999"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: pm.test('Status 404', () => pm.response.to.have.status(404));
+    language: text/javascript
+order: 5000
