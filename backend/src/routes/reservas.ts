@@ -80,6 +80,10 @@ reservasRouter.post("/:id/checkout", (req, res) => {
         return res.status(404).json({ error: "Reserva não encontrada" });
     }
 
+    if (reserva.status !== "Em andamento") {
+        return res.status(400).json({ error: "Só é possível realizar check-out de uma reserva em andamento" });
+    }
+
     db.prepare("UPDATE quartos SET status = 'Limpeza Pendente' WHERE id = ?").run(reserva.quarto_id);
     db.prepare("UPDATE reservas SET status = 'Finalizado' WHERE id = ?").run(id);
 

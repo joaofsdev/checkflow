@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, Quarto } from "./api";
 import { Erro } from "./Erro";
+import { Sucesso } from "./Sucesso";
 
 const estiloStatus: Record<Quarto["status"], string> = {
     Livre: "bg-status-livre/10 text-status-livre",
@@ -13,9 +14,14 @@ export function Quartos() {
     const [numero, setNumero] = useState("");
     const [tipo, setTipo] = useState("");
     const [erro, setErro] = useState("");
+    const [sucesso, setSucesso] = useState("");
+    const [busca, setBusca] = useState("");
+    const [processando, setProcessando] = useState(false);
+    const [carregando, setCarregando] = useState(true);
 
     function carregar() {
-        api.listarQuartos().then(setQuartos);
+        setCarregando(true);
+        api.listarQuartos().then(setQuartos).catch((err: Error) => setErro(err.message)).finally(() => setCarregando(false));
     }
 
     useEffect(() => {
@@ -27,32 +33,51 @@ export function Quartos() {
         if (!numero || !tipo) return;
 
         setErro("");
+        setSucesso("");
+        setProcessando(true);
         try {
             await api.criarQuarto(numero, tipo);
             setNumero("");
             setTipo("");
+            setSucesso("Quarto cadastrado com sucesso.");
             carregar();
         } catch (err: any) {
             setErro(err.message);
+        } finally {
+            setProcessando(false);
         }
     }
 
     async function finalizarLimpeza(id: number) {
-        await api.finalizarLimpeza(id);
-        carregar();
+        setErro(""); setSucesso(""); setProcessando(true);
+        try {
+            await api.finalizarLimpeza(id);
+            setSucesso("Limpeza do quarto concluída com sucesso.");
+            carregar();
+        } catch (err: any) { setErro(err.message); } finally { setProcessando(false); }
     }
 
     async function excluirQuarto(id: number, numero: string) {
         if (!confirm(`Excluir o quarto ${numero}? Essa ação não pode ser desfeita.`)) return;
 
         setErro("");
+        setSucesso("");
+        setProcessando(true);
         try {
             await api.excluirQuarto(id);
+            setSucesso("Quarto excluído com sucesso.");
             carregar();
         } catch (err: any) {
             setErro(err.message);
+        } finally {
+            setProcessando(false);
         }
     }
+
+    const termo = busca.trim().toLocaleLowerCase("pt-BR");
+    const quartosFiltrados = [...quartos]
+        .filter((q) => !termo || [q.numero, q.tipo, q.status].some((valor) => valor.toLocaleLowerCase("pt-BR").includes(termo)))
+        .sort((a, b) => a.numero.localeCompare(b.numero, "pt-BR", { numeric: true }));
 
     return (
         <div className="space-y-8">
@@ -80,15 +105,17 @@ export function Quartos() {
                         onChange={(e) => setTipo(e.target.value)}
                     />
                 </label>
-                <button className="bg-teal text-white px-5 py-2 rounded-sm hover:bg-teal-dark transition-colors" type="submit">
-                    Adicionar quarto
+                <button disabled={processando} className="bg-teal text-white px-5 py-2 rounded-sm hover:bg-teal-dark transition-colors disabled:opacity-50" type="submit">
+                    {processando ? "Salvando..." : "Adicionar quarto"}
                 </button>
             </form>
 
             <Erro mensagem={erro} />
+            <Sucesso mensagem={sucesso} />
+            <input aria-label="Buscar quartos" className="bg-white border border-ink/15 rounded-sm px-3 py-2 w-full max-w-md focus:outline-none focus:border-teal" placeholder="Buscar por número, tipo ou status" value={busca} onChange={(e) => setBusca(e.target.value)} />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {quartos.map((q) => (
+                {quartosFiltrados.map((q) => (
                     <div key={q.id} className="bg-white border border-ink/10 rounded-sm p-5">
                         <div className="flex justify-between items-start">
                             <span className="font-serif text-lg">Quarto {q.numero}</span>
@@ -102,6 +129,7 @@ export function Quartos() {
                             {q.status === "Limpeza Pendente" && (
                                 <button
                                     onClick={() => finalizarLimpeza(q.id)}
+                                    disabled={processando}
                                     className="text-sm text-teal-dark hover:underline"
                                 >
                                     Marcar limpeza como concluída
@@ -109,6 +137,7 @@ export function Quartos() {
                             )}
                             <button
                                 onClick={() => excluirQuarto(q.id, q.numero)}
+                                disabled={processando}
                                 className="text-sm text-ink/40 hover:text-status-pendente"
                             >
                                 Excluir
@@ -117,9 +146,10 @@ export function Quartos() {
                     </div>
                 ))}
 
-                {quartos.length === 0 && (
-                    <p className="text-sm text-ink/50 col-span-full">Nenhum quarto cadastrado ainda.</p>
+                {!carregando && quartosFiltrados.length === 0 && (
+                    <p className="text-sm text-ink/50 col-span-full">{busca ? "Nenhum quarto encontrado para essa busca." : "Nenhum quarto cadastrado ainda."}</p>
                 )}
+                {carregando && <p className="text-sm text-ink/50 col-span-full">Carregando quartos...</p>}
             </div>
         </div>
     );
